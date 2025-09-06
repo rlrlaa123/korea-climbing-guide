@@ -44,7 +44,7 @@ export interface Review {
   images?: string[];
   likes: number;
   comments: Comment[];
-  createdAt: string;
+  createdAt: Date;
 }
 
 export interface Comment {
@@ -63,4 +63,4 @@ export interface Country {
   flag: string;
 }
 
-export type TabType = 'info' | 'routes' | 'reviews';
+export type TabType = "info" | "routes" | "reviews";

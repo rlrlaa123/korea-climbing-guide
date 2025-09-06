@@ -1,12 +1,18 @@
-import { useState } from 'react';
-import { Star, X } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Textarea } from './ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { countries } from '../data/countries';
-import { Country } from '../types';
+import { useState } from "react";
+import { Star } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { countries } from "../data/countries";
+import { Country } from "../types";
 
 interface WriteReviewDialogProps {
   isOpen: boolean;
@@ -20,21 +26,26 @@ interface WriteReviewDialogProps {
   }) => void;
 }
 
-export function WriteReviewDialog({ 
-  isOpen, 
-  onClose, 
-  gymName, 
-  onSubmit 
+export function WriteReviewDialog({
+  isOpen,
+  onClose,
+  gymName,
+  onSubmit,
 }: WriteReviewDialogProps) {
-  const [nickname, setNickname] = useState('');
+  const [nickname, setNickname] = useState("");
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
   const [rating, setRating] = useState(0);
-  const [reviewText, setReviewText] = useState('');
+  const [reviewText, setReviewText] = useState("");
   const [hoverRating, setHoverRating] = useState(0);
 
   const handleSubmit = () => {
-    if (!nickname.trim() || !selectedCountry || rating === 0 || !reviewText.trim()) {
-      alert('모든 필드를 입력해주세요.');
+    if (
+      !nickname.trim() ||
+      !selectedCountry ||
+      rating === 0 ||
+      !reviewText.trim()
+    ) {
+      alert("모든 필드를 입력해주세요.");
       return;
     }
 
@@ -42,14 +53,14 @@ export function WriteReviewDialog({
       nickname: nickname.trim(),
       country: selectedCountry,
       rating,
-      text: reviewText.trim()
+      text: reviewText.trim(),
     });
 
     // Reset form
-    setNickname('');
+    setNickname("");
     setSelectedCountry(null);
     setRating(0);
-    setReviewText('');
+    setReviewText("");
     onClose();
   };
 
@@ -80,10 +91,10 @@ export function WriteReviewDialog({
             <label className="block text-sm font-medium text-gray-700 mb-2">
               국가 *
             </label>
-            <Select 
-              value={selectedCountry?.code || ''} 
+            <Select
+              value={selectedCountry?.code || ""}
               onValueChange={(code) => {
-                const country = countries.find(c => c.code === code);
+                const country = countries.find((c) => c.code === code);
                 setSelectedCountry(country || null);
               }}
             >
@@ -128,14 +139,14 @@ export function WriteReviewDialog({
                   <Star
                     className={`w-6 h-6 ${
                       star <= (hoverRating || rating)
-                        ? 'text-yellow-400 fill-current'
-                        : 'text-gray-300'
+                        ? "text-yellow-400 fill-current"
+                        : "text-gray-300"
                     }`}
                   />
                 </button>
               ))}
               <span className="ml-2 text-sm text-gray-600">
-                {rating > 0 ? `${rating}/5` : '별점을 선택하세요'}
+                {rating > 0 ? `${rating}/5` : "별점을 선택하세요"}
               </span>
             </div>
           </div>

@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { Heart, MessageCircle, Star } from 'lucide-react';
-import { Review } from '../types';
-import { Button } from './ui/button';
+import { useState } from "react";
+import { Heart, MessageCircle, Star } from "lucide-react";
+import { Review } from "../types";
+// import { Button } from './ui/button';
 
 interface ReviewCardProps {
+  key: Review["id"];
   review: Review;
   onLike: (reviewId: string) => void;
   onComment: (reviewId: string) => void;
@@ -18,13 +19,14 @@ export function ReviewCard({ review, onLike, onComment }: ReviewCardProps) {
   };
 
   const formatDate = (dateInput: Date | string) => {
-    const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+    const date =
+      typeof dateInput === "string" ? new Date(dateInput) : dateInput;
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    
-    if (diffDays === 0) return '오늘';
-    if (diffDays === 1) return '1일 전';
+
+    if (diffDays === 0) return "오늘";
+    if (diffDays === 1) return "1일 전";
     if (diffDays < 30) return `${diffDays}일 전`;
     if (diffDays < 365) return `${Math.floor(diffDays / 30)}개월 전`;
     return `${Math.floor(diffDays / 365)}년 전`;
@@ -41,9 +43,13 @@ export function ReviewCard({ review, onLike, onComment }: ReviewCardProps) {
         </div>
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <span className="font-medium text-gray-900">{review.author.nickname}</span>
+            <span className="font-medium text-gray-900">
+              {review.author.nickname}
+            </span>
             <span className="text-lg">{review.author.country.flag}</span>
-            <span className="text-sm text-gray-600">{review.author.country.name}</span>
+            <span className="text-sm text-gray-600">
+              {review.author.country.name}
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex items-center">
@@ -51,9 +57,9 @@ export function ReviewCard({ review, onLike, onComment }: ReviewCardProps) {
                 <Star
                   key={i}
                   className={`w-3 h-3 ${
-                    i < review.rating 
-                      ? 'text-yellow-400 fill-current' 
-                      : 'text-gray-300'
+                    i < review.rating
+                      ? "text-yellow-400 fill-current"
+                      : "text-gray-300"
                   }`}
                 />
               ))}
@@ -66,9 +72,7 @@ export function ReviewCard({ review, onLike, onComment }: ReviewCardProps) {
       </div>
 
       {/* Review Content */}
-      <p className="text-gray-700 mb-3 leading-relaxed">
-        {review.text}
-      </p>
+      <p className="text-gray-700 mb-3 leading-relaxed">{review.text}</p>
 
       {/* Review Images */}
       {review.images && review.images.length > 0 && (
@@ -90,14 +94,14 @@ export function ReviewCard({ review, onLike, onComment }: ReviewCardProps) {
           onClick={handleLike}
           className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm transition-colors ${
             isLiked
-              ? 'text-red-600 bg-red-50'
-              : 'text-gray-600 hover:text-red-600 hover:bg-red-50'
+              ? "text-red-600 bg-red-50"
+              : "text-gray-600 hover:text-red-600 hover:bg-red-50"
           }`}
         >
-          <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
+          <Heart className={`w-4 h-4 ${isLiked ? "fill-current" : ""}`} />
           <span>{review.likes + (isLiked ? 1 : 0)}</span>
         </button>
-        
+
         <button
           onClick={() => onComment(review.id)}
           className="flex items-center gap-2 px-3 py-1 rounded-full text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-colors"
