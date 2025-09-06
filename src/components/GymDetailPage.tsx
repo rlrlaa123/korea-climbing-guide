@@ -1,12 +1,26 @@
-import { useState } from 'react';
-import { ArrowLeft, Heart, Star, MapPin, Clock, Phone, Globe, Car, Users, Coffee, Droplets, Package, Edit } from 'lucide-react';
-import { ClimbingGym, Review, TabType } from '../types';
-import { Button } from './ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Badge } from './ui/badge';
-import { ReviewCard } from './ReviewCard';
-import { WriteReviewDialog } from './WriteReviewDialog';
-import { ImageWithFallback } from './figma/ImageWithFallback';
+import { useState } from "react";
+import {
+  ArrowLeft,
+  Heart,
+  Star,
+  MapPin,
+  Clock,
+  Phone,
+  Globe,
+  Car,
+  Users,
+  Coffee,
+  Droplets,
+  Package,
+  Edit,
+} from "lucide-react";
+import { ClimbingGym, Country, Review, TabType } from "../types";
+import { Button } from "./ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { Badge } from "./ui/badge";
+import { ReviewCard } from "./ReviewCard";
+import { WriteReviewDialog } from "./WriteReviewDialog";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
 
 interface GymDetailPageProps {
   gym: ClimbingGym;
@@ -17,30 +31,35 @@ interface GymDetailPageProps {
   onSaveToggle: (gymId: string) => void;
   onReviewLike: (reviewId: string) => void;
   onReviewComment: (reviewId: string) => void;
-  onNewReview: (review: any) => void;
+  onNewReview: (review: {
+    nickname: string;
+    country: Country;
+    rating: number;
+    text: string;
+  }) => void;
 }
 
-export function GymDetailPage({ 
-  gym, 
-  reviews, 
-  isSaved, 
+export function GymDetailPage({
+  gym,
+  reviews,
+  isSaved,
   loading = false,
-  onBack, 
+  onBack,
   onSaveToggle,
   onReviewLike,
   onReviewComment,
-  onNewReview
+  onNewReview,
 }: GymDetailPageProps) {
-  const [activeTab, setActiveTab] = useState<TabType>('info');
+  const [activeTab, setActiveTab] = useState<TabType>("info");
   const [isWriteReviewOpen, setIsWriteReviewOpen] = useState(false);
 
   const facilityIcons = {
-    '샤워실': Droplets,
-    '락커': Package,
-    '렌탈장비': Package,
-    '카페': Coffee,
-    '주차장': Car,
-    '키즈존': Users,
+    샤워실: Droplets,
+    락커: Package,
+    렌탈장비: Package,
+    카페: Coffee,
+    주차장: Car,
+    키즈존: Users,
   };
 
   return (
@@ -63,12 +82,12 @@ export function GymDetailPage({
             <button
               onClick={() => onSaveToggle(gym.id)}
               className={`p-2 backdrop-blur-sm rounded-full ${
-                isSaved 
-                  ? 'bg-red-500 text-white' 
-                  : 'bg-white/20 text-white hover:bg-white/30'
+                isSaved
+                  ? "bg-red-500 text-white"
+                  : "bg-white/20 text-white hover:bg-white/30"
               }`}
             >
-              <Heart className={`w-5 h-5 ${isSaved ? 'fill-current' : ''}`} />
+              <Heart className={`w-5 h-5 ${isSaved ? "fill-current" : ""}`} />
             </button>
           </div>
         </div>
@@ -84,7 +103,7 @@ export function GymDetailPage({
             <span className="text-gray-600">({gym.reviewCount})</span>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-2 mb-4 text-gray-600">
           <MapPin className="w-4 h-4" />
           <span>{gym.location.address}</span>
@@ -100,11 +119,20 @@ export function GymDetailPage({
       </div>
 
       {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as TabType)}>
+      <Tabs
+        value={activeTab}
+        onValueChange={(value) => setActiveTab(value as TabType)}
+      >
         <TabsList className="w-full mx-4 mb-6">
-          <TabsTrigger value="info" className="flex-1">정보</TabsTrigger>
-          <TabsTrigger value="routes" className="flex-1">루트</TabsTrigger>
-          <TabsTrigger value="reviews" className="flex-1">리뷰</TabsTrigger>
+          <TabsTrigger value="info" className="flex-1">
+            정보
+          </TabsTrigger>
+          <TabsTrigger value="routes" className="flex-1">
+            루트
+          </TabsTrigger>
+          <TabsTrigger value="reviews" className="flex-1">
+            리뷰
+          </TabsTrigger>
         </TabsList>
 
         <div className="px-4">
@@ -128,8 +156,8 @@ export function GymDetailPage({
                 {gym.info.website && (
                   <div className="flex items-center gap-2">
                     <Globe className="w-4 h-4 text-gray-600" />
-                    <a 
-                      href={gym.info.website} 
+                    <a
+                      href={gym.info.website}
                       className="text-blue-600 hover:underline"
                       target="_blank"
                       rel="noopener noreferrer"
@@ -155,9 +183,14 @@ export function GymDetailPage({
               <h3 className="font-medium mb-3">시설 정보</h3>
               <div className="grid grid-cols-2 gap-3">
                 {gym.info.facilities.map((facility, index) => {
-                  const IconComponent = facilityIcons[facility as keyof typeof facilityIcons] || Package;
+                  const IconComponent =
+                    facilityIcons[facility as keyof typeof facilityIcons] ||
+                    Package;
                   return (
-                    <div key={index} className="flex items-center gap-2 text-gray-700">
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 text-gray-700"
+                    >
                       <IconComponent className="w-4 h-4" />
                       <span className="text-sm">{facility}</span>
                     </div>
@@ -171,7 +204,9 @@ export function GymDetailPage({
             {/* Bouldering Routes */}
             {gym.routes.bouldering.count > 0 && (
               <div className="bg-gray-50 rounded-lg p-4">
-                <h3 className="font-medium mb-3">볼더링 ({gym.routes.bouldering.count}개 루트)</h3>
+                <h3 className="font-medium mb-3">
+                  볼더링 ({gym.routes.bouldering.count}개 루트)
+                </h3>
                 <div className="flex flex-wrap gap-2">
                   {gym.routes.bouldering.grades.map((grade, index) => (
                     <Badge key={index} variant="outline">
@@ -185,7 +220,9 @@ export function GymDetailPage({
             {/* Lead Climbing Routes */}
             {gym.routes.leading.count > 0 && (
               <div className="bg-gray-50 rounded-lg p-4">
-                <h3 className="font-medium mb-3">리드 클라이밍 ({gym.routes.leading.count}개 루트)</h3>
+                <h3 className="font-medium mb-3">
+                  리드 클라이밍 ({gym.routes.leading.count}개 루트)
+                </h3>
                 <div className="flex flex-wrap gap-2">
                   {gym.routes.leading.grades.map((grade, index) => (
                     <Badge key={index} variant="outline">
@@ -200,7 +237,7 @@ export function GymDetailPage({
           <TabsContent value="reviews" className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="font-medium">리뷰 ({reviews.length})</h3>
-              <Button 
+              <Button
                 onClick={() => setIsWriteReviewOpen(true)}
                 className="flex items-center gap-2"
               >
